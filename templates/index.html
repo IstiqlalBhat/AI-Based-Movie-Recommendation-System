@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+    <div class="container text-center">
+        <h1 class="display-3 mb-4">Discover Your Next Favorite Movie</h1>
+        <p class="lead mb-5">Powered by machine learning to provide personalized movie recommendations</p>
+        
+        <div class="search-container">
+            <div class="input-group">
+                <input type="text" id="movie-search" class="form-control" placeholder="Search for a movie..." aria-label="Search for a movie">
+                <button class="btn btn-primary" type="button" id="search-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            <div id="search-feedback" class="feedback mt-2"></div>
+        </div>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="container">
+        <!-- Search Results -->
+        <div id="search-results-container" class="mb-5 d-none">
+            <h2 class="section-title">Search Results</h2>
+            <div class="row g-4" id="search-results">
+                <!-- Search results will be populated here -->
+            </div>
+        </div>
+        
+        <!-- Selected Movie -->
+        <div id="selected-movie-container" class="mb-5 d-none">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="movie-poster-large">
+                        <div class="placeholder-poster">
+                            <i class="fas fa-film"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <h2 id="selected-movie-title" class="movie-title"></h2>
+                    <div id="selected-movie-genres" class="genres mb-3"></div>
+                    <div class="loader-container" id="recommendation-loader">
+                        <div class="loader">Loading...</div>
+                        <p>Finding recommendations...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recommendations -->
+        <div id="recommendations-container" class="mb-5 d-none">
+            <h2 class="section-title">Recommended Movies</h2>
+            <p class="recommendation-intro">Because you liked <span id="base-movie-title"></span></p>
+            <div class="row g-4" id="recommendations">
+                <!-- Recommendations will be populated here -->
+            </div>
+        </div>
+        
+        <!-- Featured/Initial Content -->
+        <div id="initial-content">
+            <div class="text-center mb-5">
+                <h2 class="section-title">How It Works</h2>
+                <div class="row g-4 mt-3">
+                    <div class="col-md-4">
+                        <div class="feature-card">
+                            <div class="icon-container">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <h3>Search</h3>
+                            <p>Find your favorite movie from our database of thousands of titles</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="feature-card">
+                            <div class="icon-container">
+                                <i class="fas fa-magic"></i>
+                            </div>
+                            <h3>Analyze</h3>
+                            <p>Our AI analyzes viewing patterns of similar users</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="feature-card">
+                            <div class="icon-container">
+                                <i class="fas fa-thumbs-up"></i>
+                            </div>
+                            <h3>Discover</h3>
+                            <p>Get personalized recommendations based on your preferences</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="about" class="about-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="section-title">About CinemaMatch</h2>
+                <p>CinemaMatch uses advanced machine learning algorithms to provide personalized movie recommendations. Our system combines content-based filtering (analyzing movie attributes) with collaborative filtering (analyzing user behavior patterns).</p>
+                <p>The recommendation engine is powered by:</p>
+                <ul>
+                    <li>TF-IDF vectorization for accurate movie searching</li>
+                    <li>Collaborative filtering based on user ratings</li>
+                    <li>Machine learning to identify patterns in movie preferences</li>
+                </ul>
+            </div>
+            <div class="col-lg-6">
+                <div class="about-image">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 800" class="tech-illustration">
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#5e72e4;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#825ee4;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <rect x="100" y="100" width="800" height="600" rx="20" ry="20" fill="#1a1e3a" stroke="#5e72e4" stroke-width="4"/>
+                        <circle cx="500" cy="400" r="150" fill="none" stroke="url(#grad1)" stroke-width="8"/>
+                        <circle cx="500" cy="400" r="100" fill="none" stroke="#825ee4" stroke-width="6" stroke-dasharray="30,10"/>
+                        <circle cx="500" cy="400" r="50" fill="#5e72e4"/>
+                        
+                        <!-- Nodes -->
+                        <circle cx="300" cy="250" r="20" fill="#f7fafc"/>
+                        <circle cx="700" cy="300" r="20" fill="#f7fafc"/>
+                        <circle cx="650" cy="550" r="20" fill="#f7fafc"/>
+                        <circle cx="350" cy="500" r="20" fill="#f7fafc"/>
+                        
+                        <!-- Connecting lines -->
+                        <line x1="500" y1="400" x2="300" y2="250" stroke="#f7fafc" stroke-width="3"/>
+                        <line x1="500" y1="400" x2="700" y2="300" stroke="#f7fafc" stroke-width="3"/>
+                        <line x1="500" y1="400" x2="650" y2="550" stroke="#f7fafc" stroke-width="3"/>
+                        <line x1="500" y1="400" x2="350" y2="500" stroke="#f7fafc" stroke-width="3"/>
+                        
+                        <!-- Movies icons -->
+                        <rect x="280" y="230" width="40" height="40" rx="5" ry="5" fill="none" stroke="#5e72e4" stroke-width="2"/>
+                        <rect x="680" y="280" width="40" height="40" rx="5" ry="5" fill="none" stroke="#5e72e4" stroke-width="2"/>
+                        <rect x="630" y="530" width="40" height="40" rx="5" ry="5" fill="none" stroke="#5e72e4" stroke-width="2"/>
+                        <rect x="330" y="480" width="40" height="40" rx="5" ry="5" fill="none" stroke="#5e72e4" stroke-width="2"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Templates for dynamically created content -->
+<template id="movie-card-template">
+    <div class="col-md-4 col-lg-3">
+        <div class="movie-card" data-movie-id="">
+            <div class="movie-poster">
+                <div class="placeholder-poster">
+                    <i class="fas fa-film"></i>
+                </div>
+            </div>
+            <div class="movie-info">
+                <h3 class="movie-title"></h3>
+                <div class="genres"></div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="recommendation-card-template">
+    <div class="col-md-4 col-lg-3">
+        <div class="movie-card recommendation" data-movie-id="">
+            <div class="movie-poster">
+                <div class="placeholder-poster">
+                    <i class="fas fa-film"></i>
+                </div>
+            </div>
+            <div class="movie-info">
+                <h3 class="movie-title"></h3>
+                <div class="genres"></div>
+                <div class="match-score">
+                    <div class="score-bar">
+                        <div class="score-fill"></div>
+                    </div>
+                    <span class="score-text"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+{% endblock %}
