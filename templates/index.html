@@ -6,7 +6,12 @@
         <h1 class="display-3 mb-4">Discover Your Next Favorite Movie</h1>
         <p class="lead mb-5">Just type a movie you like and instantly get personalized recommendations</p>
         
-        <div class="search-container">
+        <div class="tab-navigation mb-4">
+            <button class="tab-button active" id="standard-tab">Standard Recommendations</button>
+            <button class="tab-button" id="emotion-tab">EmotionFlix <span class="badge">AI</span></button>
+        </div>
+        
+        <div id="standard-search" class="search-container">
             <div class="input-group">
                 <input type="text" id="movie-search" class="form-control" placeholder="Enter a movie you like..." aria-label="Enter a movie you like">
                 <button class="btn btn-primary" type="button" id="recommend-button">
@@ -14,6 +19,23 @@
                 </button>
             </div>
             <div id="search-feedback" class="feedback mt-2"></div>
+        </div>
+        
+        <div id="emotion-search" class="search-container d-none">
+            <div class="card emotion-card">
+                <div class="card-body">
+                    <h5 class="card-title">Share Your Feelings</h5>
+                    <p class="card-text">Tell EmotionFlix how you're feeling today, and it will suggest movies perfect for your emotional state.</p>
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" id="emotion-input" style="height: 100px" placeholder="Describe your feelings..."></textarea>
+                        <label for="emotion-input">How are you feeling today?</label>
+                    </div>
+                    <button class="btn btn-primary w-100" id="emotion-recommend-button">
+                        <i class="fas fa-heart"></i> Get Emotional Recommendations
+                    </button>
+                    <div id="emotion-feedback" class="feedback mt-2"></div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -48,6 +70,34 @@
             <p class="recommendation-intro">Similar to <span id="base-movie-title"></span></p>
             <div class="row g-4" id="recommendations">
                 <!-- Recommendations will be populated here -->
+            </div>
+        </div>
+        
+        <!-- EmotionFlix Recommendations -->
+        <div id="emotion-recommendations-container" class="mb-5 d-none">
+            <div class="emotion-response-card mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start">
+                            <div class="emotion-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="emotion-content">
+                                <h5 class="card-title">EmotionFlix</h5>
+                                <div id="emotion-response" class="card-text"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-4" id="emotion-recommendations">
+                <!-- Emotional recommendations will be populated here -->
+            </div>
+            
+            <div class="text-center mt-4">
+                <button class="btn btn-outline-primary" id="emotion-chat-continue">
+                    <i class="fas fa-comments"></i> Continue Conversation
+                </button>
             </div>
         </div>
         
@@ -175,6 +225,34 @@
                     <span class="score-text"></span>
                 </div>
             </div>
+        </div>
+    </div>
+</template>
+
+<template id="chat-template">
+    <div class="emotion-chat-container mb-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-start">
+                    <div class="emotion-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="emotion-content">
+                        <div class="chat-message"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="chat-input-template">
+    <div class="emotion-chat-input mt-4">
+        <div class="input-group">
+            <input type="text" class="form-control" id="chat-message-input" placeholder="Continue the conversation...">
+            <button class="btn btn-primary" id="chat-send-button">
+                <i class="fas fa-paper-plane"></i> Send
+            </button>
         </div>
     </div>
 </template>
