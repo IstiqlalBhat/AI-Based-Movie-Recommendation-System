@@ -42,6 +42,15 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Improve input text visibility */
+.emotion-card textarea.form-control,
+.emotion-card input.form-control,
+#chat-message-input {
+    color: #222;
+    font-weight: 500;
+    background-color: #fff;
+}
+
 .emotion-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -56,6 +65,17 @@
 .emotion-response-card {
     max-width: 800px;
     margin: 0 auto;
+}
+
+.emotion-response-card .card {
+    background-color: #fff;
+    border: 1px solid #e9ecef;
+}
+
+.emotion-response-card .card-title {
+    color: #5e72e4;
+    font-weight: 600;
+    margin-bottom: 10px;
 }
 
 .emotion-avatar {
@@ -84,6 +104,15 @@
 .emotion-chat-container .card {
     border-radius: 15px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    background-color: #fff;
+}
+
+.emotion-chat-container .chat-message,
+#emotion-response {
+    color: #333;
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.6;
 }
 
 .emotion-chat-input {
