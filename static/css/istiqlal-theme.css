@@ -1,0 +1,400 @@
+/* Istiqlal's Movie Recommender - Fuscia Pink and Red Theme */
+
+:root {
+    --primary-color: #FF1493; /* Deep Pink */
+    --secondary-color: #FF0066; /* Fuscia Pink */
+    --accent-color: #FF355E; /* Radical Red */
+    --highlight-color: #FF69B4; /* Hot Pink */
+    --dark-color: #990033; /* Deep Pink */
+    --light-color: #FFB6C1; /* Light Pink */
+    --text-color: #333333;
+    --background-color: #FFFFFF;
+    --card-bg: #FFF0F5; /* Lavender Blush */
+    --hover-color: #FF83FA; /* Orchid */
+}
+
+/* Global Elements */
+body {
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+.cinema-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 240, 245, 0.9) 0%, rgba(255, 228, 225, 0.8) 100%);
+    z-index: -1;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+}
+
+.section-title {
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 50px;
+    height: 4px;
+    background: var(--accent-color);
+}
+
+.text-center .section-title::after {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Navigation */
+.navbar {
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+.navbar-brand i {
+    color: var(--accent-color);
+}
+
+.nav-link {
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--primary-color);
+}
+
+/* Hero Section */
+.hero {
+    padding: 6rem 0 3rem;
+    text-align: center;
+}
+
+.hero h1 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-weight: 800;
+}
+
+.hero p {
+    color: var(--text-color);
+    font-size: 1.2rem;
+    max-width: 800px;
+    margin: 0 auto 2rem;
+}
+
+/* Tab Navigation */
+.tab-navigation {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.tab-button {
+    background-color: var(--light-color);
+    color: var(--dark-color);
+    border: none;
+    border-radius: 30px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.tab-button.active {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 4px 10px rgba(255, 20, 147, 0.3);
+}
+
+.tab-button:hover:not(.active) {
+    background-color: var(--hover-color);
+    transform: translateY(-2px);
+}
+
+.tab-button .badge {
+    background-color: var(--accent-color);
+    color: white;
+    margin-left: 5px;
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 10px;
+}
+
+/* Search Container */
+.search-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.input-group {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 30px;
+    overflow: hidden;
+}
+
+.form-control {
+    border: none;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: var(--primary-color);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(255, 20, 147, 0.3);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(255, 20, 147, 0.3);
+}
+
+/* Feature Cards */
+.feature-card {
+    background-color: var(--card-bg);
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.icon-container {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+}
+
+.feature-card h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+/* Movie Cards */
+.movie-card {
+    background-color: var(--card-bg);
+    border-radius: 15px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.movie-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.movie-poster {
+    height: 200px;
+    background-color: var(--dark-color);
+    position: relative;
+}
+
+.placeholder-poster {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--light-color);
+    font-size: 3rem;
+}
+
+.movie-info {
+    padding: 1.5rem;
+}
+
+.movie-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+}
+
+.genres {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.genre-tag {
+    background-color: var(--light-color);
+    color: var(--dark-color);
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 20px;
+}
+
+.match-score {
+    margin-top: 1rem;
+}
+
+.score-bar {
+    height: 6px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.score-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color) 0%, var(--accent-color) 100%);
+}
+
+.score-text {
+    font-size: 0.8rem;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Footer */
+footer {
+    background-color: var(--dark-color);
+    color: white;
+    padding: 2rem 0;
+}
+
+footer p {
+    margin-bottom: 1rem;
+}
+
+.social-links a {
+    color: white;
+    font-size: 1.5rem;
+    transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+    color: var(--light-color);
+}
+
+/* Emotional Recommendations */
+.emotion-card {
+    background: linear-gradient(135deg, #FFF0F5 0%, #FFE4E1 100%);
+}
+
+.emotion-chat-container .card {
+    border-color: var(--light-color);
+}
+
+.emotion-avatar {
+    background-color: var(--primary-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero {
+        padding: 4rem 0 2rem;
+    }
+    
+    .hero h1 {
+        font-size: 2rem;
+    }
+    
+    .feature-card {
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* Loader */
+.loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid rgba(255, 20, 147, 0.2);
+    border-radius: 50%;
+    border-top-color: var(--primary-color);
+    margin: 0 auto 1rem;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Emoji Mood Selector */
+.emoji-mood-selector .mood-emoji {
+    background-color: var(--card-bg);
+    border: 2px solid var(--light-color);
+    color: var(--text-color);
+}
+
+.emoji-mood-selector .mood-emoji:hover {
+    background-color: var(--light-color);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(255, 20, 147, 0.2);
+}
+
+.emoji-mood-selector .mood-emoji.selected {
+    border-color: var(--primary-color);
+    background-color: rgba(255, 20, 147, 0.1);
+    box-shadow: 0 4px 12px rgba(255, 20, 147, 0.3);
+}

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CinemaMatch - Movie Recommendations</title>
+    <title>Istiqlal's Movie Recommender</title>
     
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -19,6 +19,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/emotionflix.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/istiqlal-theme.css') }}">
     
     {% block extra_head %}{% endblock %}
 </head>
@@ -30,7 +31,7 @@
             <div class="container">
                 <a class="navbar-brand" href="/">
                     <i class="fas fa-film me-2"></i>
-                    <span>CinemaMatch</span>
+                    <span>Istiqlal's Movie Recommender</span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <i class="fas fa-bars"></i>
@@ -56,7 +57,7 @@
     <footer class="mt-5 py-4">
         <div class="container text-center">
             <p>
-                <i class="fas fa-code"></i> with <i class="fas fa-heart"></i> by CinemaMatch &copy; 2023
+                <i class="fas fa-code"></i> with <i class="fas fa-heart"></i> by Istiqlal's Movie Recommender &copy; 2025
             </p>
             <div class="social-links">
                 <a href="#" class="me-3"><i class="fab fa-github"></i></a>
@@ -72,6 +73,7 @@
     <!-- Custom JS -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script src="{{ url_for('static', filename='js/emotionflix.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dalle-backgrounds.js') }}"></script>
     
     {% block extra_scripts %}{% endblock %}
 </body>
