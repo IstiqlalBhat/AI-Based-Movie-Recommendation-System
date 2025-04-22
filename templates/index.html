@@ -26,6 +26,48 @@
                 <div class="card-body">
                     <h5 class="card-title">Share Your Feelings</h5>
                     <p class="card-text">Tell EmotionFlix how you're feeling today, and it will suggest movies perfect for your emotional state.</p>
+                    
+                    <!-- Emoji Mood Selector -->
+                    <div class="emoji-mood-selector mb-3">
+                        <div class="text-center mb-2">
+                            <label class="form-label">Choose your mood:</label>
+                        </div>
+                        <div class="d-flex justify-content-center flex-wrap gap-2">
+                            <button type="button" class="btn mood-emoji" data-mood="happy">
+                                <span class="emoji">😊</span>
+                                <span class="mood-label">Happy</span>
+                            </button>
+                            <button type="button" class="btn mood-emoji" data-mood="sad">
+                                <span class="emoji">😢</span>
+                                <span class="mood-label">Sad</span>
+                            </button>
+                            <button type="button" class="btn mood-emoji" data-mood="excited">
+                                <span class="emoji">🤩</span>
+                                <span class="mood-label">Excited</span>
+                            </button>
+                            <button type="button" class="btn mood-emoji" data-mood="relaxed">
+                                <span class="emoji">😌</span>
+                                <span class="mood-label">Relaxed</span>
+                            </button>
+                            <button type="button" class="btn mood-emoji" data-mood="stressed">
+                                <span class="emoji">😰</span>
+                                <span class="mood-label">Stressed</span>
+                            </button>
+                            <button type="button" class="btn mood-emoji" data-mood="bored">
+                                <span class="emoji">😑</span>
+                                <span class="mood-label">Bored</span>
+                            </button>
+                            <button type="button" class="btn mood-emoji" data-mood="angry">
+                                <span class="emoji">😡</span>
+                                <span class="mood-label">Angry</span>
+                            </button>
+                            <button type="button" class="btn mood-emoji" data-mood="romantic">
+                                <span class="emoji">❤️</span>
+                                <span class="mood-label">Romantic</span>
+                            </button>
+                        </div>
+                    </div>
+                    
                     <div class="form-floating mb-3">
                         <textarea class="form-control" id="emotion-input" style="height: 100px" placeholder="Describe your feelings..."></textarea>
                         <label for="emotion-input">How are you feeling today?</label>

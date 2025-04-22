@@ -14,6 +14,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const emotionRecommendations = document.getElementById('emotion-recommendations');
     const emotionChatContinue = document.getElementById('emotion-chat-continue');
     
+    // Emoji mood selector
+    const moodEmojiButtons = document.querySelectorAll('.mood-emoji');
+    let selectedMood = null;
+    
     // Templates
     const chatTemplate = document.getElementById('chat-template');
     const chatInputTemplate = document.getElementById('chat-input-template');
@@ -61,6 +65,46 @@ document.addEventListener('DOMContentLoaded', function() {
         showChatInput();
     });
     
+    // Emoji mood selector buttons
+    moodEmojiButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const mood = this.dataset.mood;
+            
+            // Toggle selection
+            moodEmojiButtons.forEach(btn => btn.classList.remove('selected'));
+            this.classList.add('selected');
+            
+            // Store selected mood
+            selectedMood = mood;
+            
+            // Update textarea with mood description
+            updateMoodDescription(mood);
+        });
+    });
+    
+    /**
+     * Updates the textarea with a mood description based on the selected emoji
+     */
+    function updateMoodDescription(mood) {
+        const moodDescriptions = {
+            'happy': "I'm feeling really happy and upbeat today. Looking for something that will keep my good mood going!",
+            'sad': "I'm feeling a bit down and melancholic today. Need something that might comfort me or help me process these feelings.",
+            'excited': "I'm super excited and full of energy! Want to watch something that matches this energetic vibe.",
+            'relaxed': "I'm in a calm, relaxed mood. Looking for something chill that won't stress me out.",
+            'stressed': "Been feeling really stressed lately with work and life. Need something to help me unwind and forget my worries.",
+            'bored': "I'm feeling pretty bored and need something engaging that will captivate my attention.",
+            'angry': "I'm feeling frustrated and angry today. Looking for something to help channel or release these emotions.",
+            'romantic': "I'm in a romantic mood today. Looking for something heartwarming that captures the beauty of love."
+        };
+        
+        // Update the text area with the corresponding mood description
+        if (moodDescriptions[mood]) {
+            emotionInput.value = moodDescriptions[mood];
+            // Trigger input event to resize textarea if needed
+            emotionInput.dispatchEvent(new Event('input'));
+        }
+    }
+    
     /**
      * Get emotional recommendations based on user input
      */
@@ -84,7 +128,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                emotion: emotion
+                emotion: emotion,
+                mood: selectedMood // Include the selected mood emoji if one was clicked
             })
         })
         .then(response => {

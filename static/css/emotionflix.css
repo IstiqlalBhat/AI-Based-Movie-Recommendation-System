@@ -51,6 +51,45 @@
     background-color: #fff;
 }
 
+/* Emoji Mood Selector */
+.emoji-mood-selector {
+    margin-bottom: 1.5rem;
+}
+
+.emoji-mood-selector .mood-emoji {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 12px;
+    padding: 10px;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+    background-color: #fff;
+    color: #333;
+}
+
+.emoji-mood-selector .mood-emoji:hover {
+    background-color: #f0f4ff;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.emoji-mood-selector .mood-emoji.selected {
+    border-color: #5e72e4;
+    background-color: #eef1fd;
+    box-shadow: 0 4px 12px rgba(94, 114, 228, 0.2);
+}
+
+.emoji-mood-selector .emoji {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+}
+
+.emoji-mood-selector .mood-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
 .emotion-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
