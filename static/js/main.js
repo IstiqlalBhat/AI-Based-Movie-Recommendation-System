@@ -195,27 +195,28 @@ document.addEventListener('DOMContentLoaded', function() {
      * @param {number} movieId - The movie ID to get recommendations for
      */
     function fetchRecommendations(movieId) {
-        fetch(`/api/recommend?movieId=${encodeURIComponent(movieId)}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to get recommendations');
-                }
-                return response.json();
+        fetch(`/api/recommend/${encodeURIComponent(movieId)}`)
+            .then(r => {
+                if (!r.ok) throw new Error("Failed to get recommendations");
+                return r.json();
             })
             .then(data => {
-                if (data.recommendations && data.recommendations.length > 0) {
+                if (data.recommendations?.length) {
                     displayRecommendations(data.recommendations);
                 } else {
-                    recommendationLoader.style.display = 'none';
-                    searchFeedback.textContent = 'No recommendations found for this movie.';
+                    recommendationLoader.style.display = "none";
+                    searchFeedback.textContent =
+                        "No recommendations found for this movie.";
                 }
             })
-            .catch(error => {
-                console.error('Error getting recommendations:', error);
-                recommendationLoader.style.display = 'none';
-                searchFeedback.textContent = 'An error occurred while getting recommendations. Please try again.';
+            .catch(err => {
+                console.error("Error getting recommendations:", err);
+                recommendationLoader.style.display = "none";
+                searchFeedback.textContent =
+                    "An error occurred while getting recommendations. Please try again.";
             });
     }
+
     
     /**
      * Displays movie recommendations in the UI

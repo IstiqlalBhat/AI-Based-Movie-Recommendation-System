@@ -1,71 +1,105 @@
+# app.py  ― fully updated Flask backend for the movie‑recommender stack
+# ---------------------------------------------------------------
 import os
 import logging
-from flask import Flask, render_template, request, jsonify
+from flask import (
+    Flask,
+    request,
+    jsonify,
+    render_template,
+    send_from_directory,
+)
+from flask_cors import CORS
+from werkzeug.utils import safe_join         # Flask 3.x no longer re‑exports this
 from model import MovieRecommender
 
-# Configure logging
-logging.basicConfig(level=logging.DEBUG)
+# ────────────────────────────────────────────────────────────────
+# basic logging config
+logging.basicConfig(level=logging.INFO)
 
-# Initialize the app
-app = Flask(__name__)
-app.secret_key = os.environ.get("SESSION_SECRET", "dev_secret_key")
+# create Flask app
+app = Flask(__name__)  # Use default static folder
+CORS(app)             # enable cross‑origin requests
+app.secret_key = os.getenv("SESSION_SECRET", "dev_secret_key")
 
-# Initialize the recommender model
+# instantiate the recommender once at startup
 try:
     recommender = MovieRecommender()
-    app.logger.info("Movie recommender initialized successfully")
-except Exception as e:
-    app.logger.error(f"Error initializing movie recommender: {e}")
+    app.logger.info("MovieRecommender loaded 👍")
+except Exception as exc:
+    app.logger.error(f"Failed to init recommender: {exc}")
     recommender = None
 
-@app.route('/')
-def index():
-    """Render the main page of the application."""
-    return render_template('index.html')
-
-@app.route('/api/search', methods=['GET'])
+# ───────────────────────────── API ROUTES ───────────────────────
+@app.route("/api/search")
 def search_movies():
-    """API endpoint to search for movies by title."""
-    query = request.args.get('query', '')
-    if not query or len(query) < 3:
-        return jsonify({"error": "Query too short", "results": []}), 400
-    
+    """Search movies by title substring (min 3 chars)."""
+    query = request.args.get("query", "").strip()
+    if len(query) < 3:
+        # return 200 with empty list so the front‑end doesn’t treat it as an error
+        return jsonify({"results": []})
     try:
         results = recommender.search_movies(query)
-        return jsonify({"results": results.to_dict(orient='records')})
-    except Exception as e:
-        app.logger.error(f"Error searching movies: {e}")
-        return jsonify({"error": str(e), "results": []}), 500
+        return jsonify({"results": results.to_dict(orient="records")})
+    except Exception as exc:
+        app.logger.error(f"Search error: {exc}")
+        return jsonify({"error": str(exc), "results": []}), 500
 
-@app.route('/api/recommend', methods=['GET'])
+
+@app.route("/api/recommend")
 def recommend_movies():
-    """API endpoint to get movie recommendations based on movie ID."""
+    """Get recommendations based on a seed movie."""
     movie_id = request.args.get('movieId')
     if not movie_id:
         return jsonify({"error": "No movie ID provided", "recommendations": []}), 400
     
     try:
         movie_id = int(movie_id)
-        recommendations = recommender.get_recommendations(movie_id)
-        return jsonify({"recommendations": recommendations.to_dict(orient='records')})
+        recs = recommender.get_recommendations(movie_id)
+        return jsonify({"recommendations": recs.to_dict(orient="records")})
     except ValueError:
         return jsonify({"error": "Invalid movie ID", "recommendations": []}), 400
-    except Exception as e:
-        app.logger.error(f"Error getting recommendations: {e}")
-        return jsonify({"error": str(e), "recommendations": []}), 500
+    except Exception as exc:
+        app.logger.error(f"Recommendation error: {exc}")
+        return jsonify({"error": str(exc), "recommendations": []}), 500
 
-@app.route('/api/movies/<int:movie_id>', methods=['GET'])
-def get_movie(movie_id):
-    """API endpoint to get details for a specific movie."""
+
+@app.route("/api/movies/<int:movie_id>")
+def get_movie(movie_id: int):
+    """Return metadata for a single movie."""
     try:
         movie = recommender.get_movie(movie_id)
-        if movie is not None:
-            return jsonify({"movie": movie.to_dict()})
-        else:
+        if movie is None:
             return jsonify({"error": "Movie not found"}), 404
-    except Exception as e:
-        app.logger.error(f"Error getting movie details: {e}")
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"movie": movie.to_dict()})
+    except Exception as exc:
+        app.logger.error(f"Get‑movie error: {exc}")
+        return jsonify({"error": str(exc)}), 500
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+
+# ─────────────────────── FRONT‑END / FALLBACK ROUTE ─────────────
+# If you have a React build in ./frontend/build, serve it; otherwise
+# fall back to a Jinja template (index.html in ./templates).
+frontend_build = os.path.join(os.path.dirname(__file__), "frontend", "build")
+
+
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def serve_frontend(path: str):
+    """Serve React SPA or fallback template."""
+    # prefer React build if it exists
+    if os.path.exists(frontend_build):
+        target = safe_join(frontend_build, path)
+        if path and os.path.exists(target):
+            return send_from_directory(frontend_build, path)
+        return send_from_directory(frontend_build, "index.html")
+
+    # fallback: render a simple Jinja template
+    return render_template("index.html")
+
+
+# ────────────────────────────────────────────────────────────────
+if __name__ == "__main__":
+    # Gunicorn will run this file as 'app:app' in production,
+    # but running directly is convenient for local dev.
+    app.run(host="0.0.0.0", port=5000, debug=True)
