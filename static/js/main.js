@@ -1,13 +1,11 @@
 document.addEventListener('DOMContentLoaded', function() {
     // DOM elements
     const movieSearch = document.getElementById('movie-search');
-    const searchButton = document.getElementById('search-button');
+    const recommendButton = document.getElementById('recommend-button');
     const searchFeedback = document.getElementById('search-feedback');
-    const searchResultsContainer = document.getElementById('search-results-container');
-    const searchResults = document.getElementById('search-results');
-    const selectedMovieContainer = document.getElementById('selected-movie-container');
-    const selectedMovieTitle = document.getElementById('selected-movie-title');
-    const selectedMovieGenres = document.getElementById('selected-movie-genres');
+    const currentMovieContainer = document.getElementById('current-movie-container');
+    const currentMovieTitle = document.getElementById('current-movie-title');
+    const currentMovieGenres = document.getElementById('current-movie-genres');
     const recommendationsContainer = document.getElementById('recommendations-container');
     const recommendations = document.getElementById('recommendations');
     const baseMovieTitle = document.getElementById('base-movie-title');
@@ -19,29 +17,31 @@ document.addEventListener('DOMContentLoaded', function() {
     const recommendationCardTemplate = document.getElementById('recommendation-card-template');
     
     // Global state
-    let selectedMovie = null;
+    let currentMovie = null;
     let debounceTimeout = null;
     
     // Event listeners
-    searchButton.addEventListener('click', performSearch);
+    recommendButton.addEventListener('click', getDirectRecommendations);
     movieSearch.addEventListener('keyup', function(event) {
         if (event.key === 'Enter') {
-            performSearch();
+            getDirectRecommendations();
         } else {
-            // Debounce search as user types
+            // Debounce recommendations as user types (like Jupyter widget)
             clearTimeout(debounceTimeout);
             debounceTimeout = setTimeout(() => {
                 if (movieSearch.value.length >= 3) {
-                    performSearch();
+                    getDirectRecommendations();
                 }
-            }, 500);
+            }, 800); // 800ms delay to avoid too many requests
         }
     });
     
     /**
-     * Performs a search for movies based on the input value
+     * Gets direct recommendations based on the movie title input
+     * This mimics the Jupyter notebook's behavior where typing a title
+     * immediately shows recommendations for the best-matching movie
      */
-    function performSearch() {
+    function getDirectRecommendations() {
         const query = movieSearch.value.trim();
         
         if (query.length < 3) {
@@ -49,74 +49,53 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        searchFeedback.textContent = 'Searching...';
+        searchFeedback.textContent = 'Finding recommendations...';
+        recommendationLoader.style.display = 'flex';
+        initialContent.classList.add('d-none');
         
-        fetch(`/api/search?query=${encodeURIComponent(query)}`)
+        fetch(`/api/direct-recommend?query=${encodeURIComponent(query)}`)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Search failed');
+                    throw new Error('Recommendation failed');
                 }
                 return response.json();
             })
             .then(data => {
-                if (data.results && data.results.length > 0) {
-                    displaySearchResults(data.results);
+                if (data.current_movie && data.recommendations && data.recommendations.length > 0) {
+                    // Update the current movie and display recommendations
+                    currentMovie = data.current_movie;
+                    displayCurrentMovie(currentMovie);
+                    displayRecommendations(data.recommendations);
                     searchFeedback.textContent = '';
                 } else {
-                    searchFeedback.textContent = 'No movies found. Try a different search term.';
-                    searchResultsContainer.classList.add('d-none');
+                    searchFeedback.textContent = 'No recommendations found. Try a different movie title.';
+                    recommendationLoader.style.display = 'none';
+                    initialContent.classList.remove('d-none');
                 }
             })
             .catch(error => {
-                console.error('Error searching movies:', error);
-                searchFeedback.textContent = 'An error occurred while searching. Please try again.';
+                console.error('Error getting recommendations:', error);
+                searchFeedback.textContent = 'An error occurred. Please try again.';
+                recommendationLoader.style.display = 'none';
+                initialContent.classList.remove('d-none');
             });
     }
     
     /**
-     * Displays search results in the UI
-     * @param {Array} results - List of movie results
+     * Displays the current movie in the UI
+     * @param {Object} movie - The current movie data
      */
-    function displaySearchResults(results) {
-        // Clear previous results
-        searchResults.innerHTML = '';
+    function displayCurrentMovie(movie) {
+        // Update UI for current movie
+        currentMovieTitle.textContent = cleanMovieTitle(movie.title);
+        currentMovieGenres.innerHTML = '';
+        addGenreTags(currentMovieGenres, movie.genres);
         
-        // Create and append movie cards
-        results.forEach(movie => {
-            const movieCard = createMovieCard(movie);
-            searchResults.appendChild(movieCard);
-        });
+        // Update UI visibility
+        currentMovieContainer.classList.remove('d-none');
         
-        // Show results container, hide recommendations
-        searchResultsContainer.classList.remove('d-none');
-        selectedMovieContainer.classList.add('d-none');
-        recommendationsContainer.classList.add('d-none');
-        initialContent.classList.add('d-none');
-        
-        // Add animation
-        searchResultsContainer.classList.add('fade-in');
-    }
-    
-    /**
-     * Creates a movie card element from the template
-     * @param {Object} movie - Movie data
-     * @returns {HTMLElement} The movie card element
-     */
-    function createMovieCard(movie) {
-        const template = movieCardTemplate.content.cloneNode(true);
-        const card = template.querySelector('.movie-card');
-        
-        card.dataset.movieId = movie.movieId;
-        card.querySelector('.movie-title').textContent = cleanMovieTitle(movie.title);
-        
-        // Add genre tags
-        const genresContainer = card.querySelector('.genres');
-        addGenreTags(genresContainer, movie.genres);
-        
-        // Add click event to show recommendations
-        card.addEventListener('click', () => selectMovie(movie));
-        
-        return template;
+        // Scroll to current movie
+        currentMovieContainer.scrollIntoView({ behavior: 'smooth' });
     }
     
     /**
@@ -166,59 +145,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     /**
-     * Selects a movie and fetches recommendations
-     * @param {Object} movie - The selected movie
-     */
-    function selectMovie(movie) {
-        selectedMovie = movie;
-        
-        // Update UI for selected movie
-        selectedMovieTitle.textContent = cleanMovieTitle(movie.title);
-        selectedMovieGenres.innerHTML = '';
-        addGenreTags(selectedMovieGenres, movie.genres);
-        
-        // Update UI visibility
-        selectedMovieContainer.classList.remove('d-none');
-        recommendationLoader.style.display = 'flex';
-        recommendationsContainer.classList.add('d-none');
-        initialContent.classList.add('d-none');
-        
-        // Scroll to selected movie
-        selectedMovieContainer.scrollIntoView({ behavior: 'smooth' });
-        
-        // Fetch recommendations
-        fetchRecommendations(movie.movieId);
-    }
-    
-    /**
-     * Fetches movie recommendations based on a movie ID
-     * @param {number} movieId - The movie ID to get recommendations for
-     */
-    function fetchRecommendations(movieId) {
-        fetch(`/api/recommend?movieId=${encodeURIComponent(movieId)}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to get recommendations');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.recommendations && data.recommendations.length > 0) {
-                    displayRecommendations(data.recommendations);
-                } else {
-                    recommendationLoader.style.display = 'none';
-                    searchFeedback.textContent = 'No recommendations found for this movie.';
-                }
-            })
-            .catch(error => {
-                console.error('Error getting recommendations:', error);
-                recommendationLoader.style.display = 'none';
-                searchFeedback.textContent = 'An error occurred while getting recommendations. Please try again.';
-            });
-    }
-
-    
-    /**
      * Displays movie recommendations in the UI
      * @param {Array} recommendationsList - List of recommended movies
      */
@@ -235,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update UI visibility
         recommendationLoader.style.display = 'none';
         recommendationsContainer.classList.remove('d-none');
-        baseMovieTitle.textContent = cleanMovieTitle(selectedMovie.title);
+        baseMovieTitle.textContent = cleanMovieTitle(currentMovie.title);
         
         // Add animation
         recommendationsContainer.classList.add('fade-in');
@@ -259,4 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
             card.classList.add('fade-in');
         }, index * 200);
     });
+    
+    // Auto-focus the search input on page load
+    movieSearch.focus();
 });

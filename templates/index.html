@@ -4,13 +4,13 @@
 <section class="hero">
     <div class="container text-center">
         <h1 class="display-3 mb-4">Discover Your Next Favorite Movie</h1>
-        <p class="lead mb-5">Powered by machine learning to provide personalized movie recommendations</p>
+        <p class="lead mb-5">Just type a movie you like and instantly get personalized recommendations</p>
         
         <div class="search-container">
             <div class="input-group">
-                <input type="text" id="movie-search" class="form-control" placeholder="Search for a movie..." aria-label="Search for a movie">
-                <button class="btn btn-primary" type="button" id="search-button">
-                    <i class="fas fa-search"></i>
+                <input type="text" id="movie-search" class="form-control" placeholder="Enter a movie you like..." aria-label="Enter a movie you like">
+                <button class="btn btn-primary" type="button" id="recommend-button">
+                    <i class="fas fa-magic"></i> Recommend
                 </button>
             </div>
             <div id="search-feedback" class="feedback mt-2"></div>
@@ -20,17 +20,9 @@
 
 <section class="content-section">
     <div class="container">
-        <!-- Search Results -->
-        <div id="search-results-container" class="mb-5 d-none">
-            <h2 class="section-title">Search Results</h2>
-            <div class="row g-4" id="search-results">
-                <!-- Search results will be populated here -->
-            </div>
-        </div>
-        
-        <!-- Selected Movie -->
-        <div id="selected-movie-container" class="mb-5 d-none">
-            <div class="row">
+        <!-- Current Movie -->
+        <div id="current-movie-container" class="mb-5 d-none">
+            <div class="row align-items-center">
                 <div class="col-md-4">
                     <div class="movie-poster-large">
                         <div class="placeholder-poster">
@@ -39,8 +31,9 @@
                     </div>
                 </div>
                 <div class="col-md-8">
-                    <h2 id="selected-movie-title" class="movie-title"></h2>
-                    <div id="selected-movie-genres" class="genres mb-3"></div>
+                    <h2 id="current-movie-title" class="movie-title"></h2>
+                    <div id="current-movie-genres" class="genres mb-3"></div>
+                    <p class="movie-description">Showing recommendations based on this movie</p>
                     <div class="loader-container" id="recommendation-loader">
                         <div class="loader">Loading...</div>
                         <p>Finding recommendations...</p>
@@ -52,7 +45,7 @@
         <!-- Recommendations -->
         <div id="recommendations-container" class="mb-5 d-none">
             <h2 class="section-title">Recommended Movies</h2>
-            <p class="recommendation-intro">Because you liked <span id="base-movie-title"></span></p>
+            <p class="recommendation-intro">Similar to <span id="base-movie-title"></span></p>
             <div class="row g-4" id="recommendations">
                 <!-- Recommendations will be populated here -->
             </div>
@@ -66,10 +59,10 @@
                     <div class="col-md-4">
                         <div class="feature-card">
                             <div class="icon-container">
-                                <i class="fas fa-search"></i>
+                                <i class="fas fa-keyboard"></i>
                             </div>
-                            <h3>Search</h3>
-                            <p>Find your favorite movie from our database of thousands of titles</p>
+                            <h3>Enter a Movie</h3>
+                            <p>Simply type the name of a movie you enjoy</p>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -77,8 +70,8 @@
                             <div class="icon-container">
                                 <i class="fas fa-magic"></i>
                             </div>
-                            <h3>Analyze</h3>
-                            <p>Our AI analyzes viewing patterns of similar users</p>
+                            <h3>Instant Matching</h3>
+                            <p>Our AI instantly finds the best matches to your movie</p>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -87,7 +80,7 @@
                                 <i class="fas fa-thumbs-up"></i>
                             </div>
                             <h3>Discover</h3>
-                            <p>Get personalized recommendations based on your preferences</p>
+                            <p>Explore recommendations from users with similar taste</p>
                         </div>
                     </div>
                 </div>

@@ -64,6 +64,37 @@ def recommend_movies():
         return jsonify({"error": str(exc), "recommendations": []}), 500
 
 
+@app.route("/api/direct-recommend")
+def direct_recommend():
+    """Search for a movie by title and get recommendations in one call.
+    This mimics the behavior of the Jupyter notebook."""
+    query = request.args.get("query", "").strip()
+    if len(query) < 3:
+        return jsonify({"error": "Query too short", "current_movie": None, "recommendations": []}), 400
+    
+    try:
+        # First search for the movie
+        search_results = recommender.search_movies(query, max_results=1)
+        if len(search_results) == 0:
+            return jsonify({"error": "No movies found", "current_movie": None, "recommendations": []}), 404
+        
+        # Get the top movie from search results
+        movie = search_results.iloc[0]
+        movie_id = movie["movieId"]
+        
+        # Get recommendations based on that movie
+        recommendations = recommender.get_recommendations(movie_id)
+        
+        # Return both the current movie and recommendations
+        return jsonify({
+            "current_movie": movie.to_dict(),
+            "recommendations": recommendations.to_dict(orient="records")
+        })
+    except Exception as exc:
+        app.logger.error(f"Direct recommendation error: {exc}")
+        return jsonify({"error": str(exc), "current_movie": None, "recommendations": []}), 500
+
+
 @app.route("/api/movies/<int:movie_id>")
 def get_movie(movie_id: int):
     """Return metadata for a single movie."""
