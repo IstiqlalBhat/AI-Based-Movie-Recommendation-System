@@ -119,6 +119,14 @@ def emotion_recommendation():
             return jsonify({"error": "Emotion data required"}), 400
             
         user_emotion = data["emotion"]
+        selected_mood = data.get("mood", None)  # Get the selected mood emoji
+        
+        # If a mood emoji was selected, enhance the user's emotional context
+        if selected_mood:
+            app.logger.info(f"Selected mood emoji: {selected_mood}")
+            # Add the mood information to the user's emotion for better context
+            user_emotion = f"Mood: {selected_mood}. {user_emotion}"
+        
         movie_query = data.get("movie", "")
         
         # Get movies based on the query if provided, otherwise get popular movies
@@ -160,6 +168,13 @@ def emotion_chat():
             return jsonify({"error": "Message required"}), 400
             
         user_message = data["message"]
+        selected_mood = data.get("mood", None)  # Get the selected mood emoji if available
+        
+        # If a mood emoji was selected, enhance the user's message
+        if selected_mood:
+            app.logger.info(f"Chat with mood emoji: {selected_mood}")
+            # Add the mood information to the user's message
+            user_message = f"Mood: {selected_mood}. {user_message}"
         
         # Get emotionally intelligent response from EmotionFlix
         response = emotion_flix.get_emotionflix_response(user_message)

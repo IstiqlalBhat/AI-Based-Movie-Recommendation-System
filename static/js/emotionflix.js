@@ -145,6 +145,10 @@ document.addEventListener('DOMContentLoaded', function() {
             // Hide feedback
             emotionFeedback.textContent = '';
             
+            // Reset mood selection
+            moodEmojiButtons.forEach(btn => btn.classList.remove('selected'));
+            selectedMood = null;
+            
             // Display the emotional response
             displayEmotionalResponse(data);
             
@@ -263,7 +267,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                message: message
+                message: message,
+                mood: selectedMood // Include the selected mood if available
             })
         })
         .then(response => {
@@ -275,6 +280,12 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             // Remove thinking indicator
             emotionRecommendationsContainer.removeChild(thinkingMessage);
+            
+            // Reset mood selection if any was active
+            if (selectedMood) {
+                moodEmojiButtons.forEach(btn => btn.classList.remove('selected'));
+                selectedMood = null;
+            }
             
             // Add AI response to chat history
             addToChatHistory('assistant', data.response);
