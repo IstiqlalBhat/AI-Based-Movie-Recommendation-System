@@ -12,6 +12,7 @@ from flask import (
 from flask_cors import CORS
 from werkzeug.utils import safe_join         # Flask 3.x no longer re‑exports this
 from model import MovieRecommender
+import emotion_flix
 
 # ────────────────────────────────────────────────────────────────
 # basic logging config
@@ -105,6 +106,70 @@ def get_movie(movie_id: int):
         return jsonify({"movie": movie.to_dict()})
     except Exception as exc:
         app.logger.error(f"Get‑movie error: {exc}")
+        return jsonify({"error": str(exc)}), 500
+
+
+@app.route("/api/emotionflix", methods=["POST"])
+def emotion_recommendation():
+    """Get emotionally intelligent movie recommendations."""
+    try:
+        data = request.get_json()
+        
+        if not data or "emotion" not in data:
+            return jsonify({"error": "Emotion data required"}), 400
+            
+        user_emotion = data["emotion"]
+        movie_query = data.get("movie", "")
+        
+        # Get movies based on the query if provided, otherwise get popular movies
+        if movie_query and len(movie_query.strip()) >= 3:
+            movie_results = recommender.search_movies(movie_query, max_results=5)
+        else:
+            # Get the top rated movies as a default set
+            # Using a dummy search for common terms
+            movie_results = recommender.search_movies("the", max_results=10)
+            
+        if len(movie_results) == 0:
+            return jsonify({"error": "No movies found to recommend"}), 404
+            
+        # Format the movie data for EmotionFlix
+        movies_data = movie_results.to_dict(orient="records")
+        
+        # Use EmotionFlix to get recommendations with emotional context
+        emotional_recommendations = emotion_flix.get_movie_recommendations_with_emotion(
+            user_emotion, movies_data
+        )
+        
+        return jsonify({
+            "emotional_response": emotional_recommendations,
+            "available_movies": movies_data
+        })
+        
+    except Exception as exc:
+        app.logger.error(f"EmotionFlix error: {exc}")
+        return jsonify({"error": str(exc)}), 500
+
+
+@app.route("/api/emotionflix/chat", methods=["POST"])
+def emotion_chat():
+    """Chat with EmotionFlix assistant."""
+    try:
+        data = request.get_json()
+        
+        if not data or "message" not in data:
+            return jsonify({"error": "Message required"}), 400
+            
+        user_message = data["message"]
+        
+        # Get emotionally intelligent response from EmotionFlix
+        response = emotion_flix.get_emotionflix_response(user_message)
+        
+        return jsonify({
+            "response": response
+        })
+        
+    except Exception as exc:
+        app.logger.error(f"EmotionFlix chat error: {exc}")
         return jsonify({"error": str(exc)}), 500
 
 
